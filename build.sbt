@@ -2,7 +2,7 @@ import sbt.Keys._
 import sbt._
 import uk.gov.hmrc.versioning.SbtGitVersioning
 
-val appName = "play-whitelist-filter"
+val appName = "play-allowlist-filter"
 
 val compileDependencies = PlayCrossCompilation.dependencies(
   play25 = Seq(
@@ -32,7 +32,7 @@ val testDependencies = PlayCrossCompilation.dependencies(
   )
 )
 
-lazy val playWhitelistFilter = (project in file("."))
+lazy val playAllowlistFilter = (project in file("."))
   .enablePlugins(SbtAutoBuildPlugin, SbtGitVersioning, SbtArtifactory)
   .settings(
     name := appName,
