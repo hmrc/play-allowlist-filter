@@ -36,7 +36,7 @@ lazy val playAllowlistFilter = (project in file("."))
   .enablePlugins(SbtAutoBuildPlugin, SbtGitVersioning, SbtArtifactory)
   .settings(
     name := appName,
-    majorVersion := 3,
+    majorVersion := 0,
     makePublicallyAvailableOnBintray := true,
     libraryDependencies ++= compileDependencies ++ testDependencies,
     scalaVersion := "2.11.12",
