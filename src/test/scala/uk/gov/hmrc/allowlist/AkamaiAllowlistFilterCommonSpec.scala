@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.whitelist
+package uk.gov.hmrc.allowlist
 
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatestplus.play.OneAppPerSuite
@@ -22,9 +22,9 @@ import org.scalatestplus.play.PlaySpec
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 
-trait AkamaiWhitelistFilterCommonSpec extends PlaySpec with ScalaFutures { this: OneAppPerSuite =>
+trait AkamaiAllowlistFilterCommonSpec extends PlaySpec with ScalaFutures { this: OneAppPerSuite =>
 
-  "AkamaiWhitelistFilter (Common)" must {
+  "AkamaiAllowlistFilter (Common)" must {
     "return successfully when a valid `True-Client-IP` header is found" in {
       val Some(result) = route(app, FakeRequest("GET", "/index").withHeaders(
         "True-Client-IP" -> "127.0.0.1"

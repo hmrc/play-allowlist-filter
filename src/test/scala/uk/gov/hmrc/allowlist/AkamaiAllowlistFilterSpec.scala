@@ -14,10 +14,18 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.whitelist
+package uk.gov.hmrc.allowlist
 
-import javax.inject.Inject
+import play.api.test.FakeRequest
+import play.api.test.Helpers._
 
-import play.api.http.DefaultHttpFilters
+class AkamaiAllowlistFilterSpec extends AkamaiAllowlistFilterCommonSpec with TestApp {
 
-class TestFilters @Inject()(whitelist: AkamaiWhitelistFilter) extends DefaultHttpFilters(whitelist)
+  "AkamaiAllowlistFilter" must {
+
+    "return a `NotImplemented` when no `True-Client-IP` header is found" in {
+      val Some(result) = route(app, FakeRequest("GET", "/index"))
+      status(result) must be (NOT_IMPLEMENTED)
+    }
+  }
+}

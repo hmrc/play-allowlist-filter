@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,18 +14,19 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.hello
+package uk.gov.hmrc.allowlist
 
-import org.scalatest.Matchers._
-import org.scalatest.WordSpecLike
+import play.api.test.FakeRequest
+import play.api.test.Helpers._
 
+class AkamaiAllowlistFilterWithCustomFailureDefaultSpec extends AkamaiAllowlistFilterCommonSpec with TestAppWithCustomFailureDefault {
 
-class HelloWorldSpecs extends WordSpecLike {
+  "AkamaiAllowlistFilter" must {
 
-  "HelloWorld" should {
-
-    "say hello" in {
-      HelloWorld.sayHello shouldBe "hello"
+    "return the success response when no `True-Client-IP` header is found" in {
+      val Some(result) = route(app, FakeRequest("GET", "/index"))
+      status(result) must be (OK)
+      contentAsString(result) must be ("success")
     }
   }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.hello
+package uk.gov.hmrc.allowlist
 
-object HelloWorld {
+import javax.inject.Inject
 
-  def sayHello:String = "hello"
-}
+import play.api.http.DefaultHttpFilters
+
+class TestFilters @Inject()(allowlist: AkamaiAllowlistFilter) extends DefaultHttpFilters(allowlist)

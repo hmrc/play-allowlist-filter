@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.whitelist
+package uk.gov.hmrc.allowlist
 
 import akka.stream.Materializer
 import javax.inject.{Inject, Singleton}
@@ -30,8 +30,8 @@ trait TestApp extends OneAppPerSuite {
   self: TestSuite =>
 
   override implicit lazy val app: Application = new GuiceApplicationBuilder()
-    .bindings(bind(classOf[AkamaiWhitelistFilter]).to(classOf[TestAkamaiWhitelistFilter]))
-    .configure("play.http.filters" -> "uk.gov.hmrc.whitelist.TestFilters")
+    .bindings(bind(classOf[AkamaiAllowlistFilter]).to(classOf[TestAkamaiAllowlistFilter]))
+    .configure("play.http.filters" -> "uk.gov.hmrc.allowlist.TestFilters")
     .routes({
       case ("GET", "/destination") => Action(Ok("destination"))
       case ("GET", "/index") => Action(Ok("success"))
@@ -41,8 +41,8 @@ trait TestApp extends OneAppPerSuite {
 }
 
 @Singleton
-private class TestAkamaiWhitelistFilter @Inject() (override val mat: Materializer) extends AkamaiWhitelistFilter {
-  override lazy val whitelist: Seq[String] = Seq("127.0.0.1")
+private class TestAkamaiAllowlistFilter @Inject()(override val mat: Materializer) extends AkamaiAllowlistFilter {
+  override lazy val allowlist: Seq[String] = Seq("127.0.0.1")
   override lazy val destination: Call = Call("GET", "/destination")
   override lazy val excludedPaths: Seq[Call] = Seq(Call("GET", "/healthcheck"))
 }

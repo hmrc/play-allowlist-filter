@@ -13,7 +13,7 @@ Getting Started
   ```scala
   resolvers += Resolver.bintrayRepo("hmrc", "releases")
   libraryDependencies ++= Seq(
-    "uk.gov.hmrc" %% "play-allowlist-filter" % "3.3.0"
+    "uk.gov.hmrc" %% "play-allowlist-filter" % "0.1.0"
   )
   ```
   
@@ -54,7 +54,7 @@ object TestGlobal extends GlobalSettings {
 }
 ```
 
-You may also wish to exlude certain paths in your application from being filtered such as healthcheck routes. This can be done by implementing the ```excludedPaths: Seq[Call]``` field in the filter:
+You may also wish to exclude certain paths in your application from being filtered such as healthcheck routes. This can be done by implementing the ```excludedPaths: Seq[Call]``` field in the filter:
 
 ```scala
 object AllowlistFilter extends AkamaiAllowlistFilter {

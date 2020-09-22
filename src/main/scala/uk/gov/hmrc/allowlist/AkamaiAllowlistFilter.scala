@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.whitelist
+package uk.gov.hmrc.allowlist
 
 import play.api.mvc.{Call, Result, RequestHeader, Filter}
 import play.api.mvc.Results._
 
 import scala.concurrent.Future
 
-trait AkamaiWhitelistFilter extends Filter {
+trait AkamaiAllowlistFilter extends Filter {
 
   val trueClient = "True-Client-IP"
 
@@ -31,7 +31,7 @@ trait AkamaiWhitelistFilter extends Filter {
   private def toCall(rh: RequestHeader): Call =
     Call(rh.method, rh.uri)
 
-  def whitelist: Seq[String]
+  def allowlist: Seq[String]
 
   def excludedPaths: Seq[Call] = Seq.empty
 
@@ -50,7 +50,7 @@ trait AkamaiWhitelistFilter extends Filter {
     } else {
       rh.headers.get(trueClient) map {
         ip =>
-          if (whitelist.contains(ip))
+          if (allowlist.contains(ip))
             f(rh)
           else if (isCircularDestination(rh))
             Future.successful(Forbidden)

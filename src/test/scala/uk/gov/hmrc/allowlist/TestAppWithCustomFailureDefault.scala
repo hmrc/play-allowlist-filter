@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.whitelist
+package uk.gov.hmrc.allowlist
 
 import akka.stream.Materializer
 import javax.inject.{Inject, Singleton}
@@ -32,8 +32,8 @@ trait TestAppWithCustomFailureDefault extends OneAppPerSuite {
   self: TestSuite =>
 
   override implicit lazy val app: Application = new GuiceApplicationBuilder()
-    .bindings(bind(classOf[AkamaiWhitelistFilter]).to(classOf[TestAkamaiWhitelistFilterWithCustomFailureDefault]))
-    .configure("play.http.filters" -> "uk.gov.hmrc.whitelist.TestFilters")
+    .bindings(bind(classOf[AkamaiAllowlistFilter]).to(classOf[TestAkamaiAllowlistFilterWithCustomFailureDefault]))
+    .configure("play.http.filters" -> "uk.gov.hmrc.allowlist.TestFilters")
     .routes({
       case ("GET", "/destination") => Action(Ok("destination"))
       case ("GET", "/index") => Action(Ok("success"))
@@ -43,8 +43,8 @@ trait TestAppWithCustomFailureDefault extends OneAppPerSuite {
 }
 
 @Singleton
-private class TestAkamaiWhitelistFilterWithCustomFailureDefault @Inject() (override val mat: Materializer) extends AkamaiWhitelistFilter {
-  override lazy val whitelist: Seq[String] = Seq("127.0.0.1")
+private class TestAkamaiAllowlistFilterWithCustomFailureDefault @Inject()(override val mat: Materializer) extends AkamaiAllowlistFilter {
+  override lazy val allowlist: Seq[String] = Seq("127.0.0.1")
   override lazy val destination: Call = Call("GET", "/destination")
   override lazy val excludedPaths: Seq[Call] = Seq(Call("GET", "/healthcheck"))
   override def noHeaderAction(f: (RequestHeader) => Future[Result],
