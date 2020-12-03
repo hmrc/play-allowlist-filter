@@ -65,4 +65,4 @@ object AllowlistFilter extends AkamaiAllowlistFilter {
 ```
 
 ===
-[![Build Status](https://travis-ci.org/hmrc/play-allowlist-filter.svg?branch=master)](https://travis-ci.org/hmrc/play-allowlist-filter) [ ![Download](https://api.bintray.com/packages/hmrc/releases/play-allowlist-filter/images/download.svg) ](https://bintray.com/hmrc/releases/play-allowlist-filter/_latestVersion)
+
