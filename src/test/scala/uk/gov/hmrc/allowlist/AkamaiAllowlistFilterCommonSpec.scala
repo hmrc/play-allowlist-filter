@@ -17,12 +17,12 @@
 package uk.gov.hmrc.allowlist
 
 import org.scalatest.concurrent.ScalaFutures
-import org.scalatestplus.play.OneAppPerSuite
 import org.scalatestplus.play.PlaySpec
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 
-trait AkamaiAllowlistFilterCommonSpec extends PlaySpec with ScalaFutures { this: OneAppPerSuite =>
+trait AkamaiAllowlistFilterCommonSpec extends PlaySpec with ScalaFutures { this: GuiceOneAppPerSuite =>
 
   "AkamaiAllowlistFilter (Common)" must {
     "return successfully when a valid `True-Client-IP` header is found" in {

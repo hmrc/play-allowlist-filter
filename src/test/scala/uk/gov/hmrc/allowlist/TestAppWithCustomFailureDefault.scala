@@ -16,30 +16,42 @@
 
 package uk.gov.hmrc.allowlist
 
-import akka.stream.Materializer
-import javax.inject.{Inject, Singleton}
-import org.scalatest.TestSuite
-import org.scalatestplus.play.OneAppPerSuite
-import play.api.Application
-import play.api.inject._
-import play.api.inject.guice.GuiceApplicationBuilder
-import play.api.mvc.Results._
-import play.api.mvc._
+import javax.inject.Inject
+import javax.inject.Singleton
 
 import scala.concurrent.Future
 
-trait TestAppWithCustomFailureDefault extends OneAppPerSuite {
+import akka.stream.Materializer
+import org.scalatest.TestSuite
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import play.api.Application
+import play.api.inject._
+import play.api.inject.guice.GuiceApplicationBuilder
+import play.api.mvc.Call
+import play.api.mvc.Results._
+import play.api.mvc._
+import play.api.test.Helpers._
+
+import Results.Ok
+
+trait TestAppWithCustomFailureDefault extends GuiceOneAppPerSuite {
   self: TestSuite =>
 
-  override implicit lazy val app: Application = new GuiceApplicationBuilder()
-    .bindings(bind(classOf[AkamaiAllowlistFilter]).to(classOf[TestAkamaiAllowlistFilterWithCustomFailureDefault]))
-    .configure("play.http.filters" -> "uk.gov.hmrc.allowlist.TestFilters")
-    .routes({
-      case ("GET", "/destination") => Action(Ok("destination"))
-      case ("GET", "/index") => Action(Ok("success"))
-      case ("GET", "/healthcheck") => Action(Ok("ping"))
-    })
-    .build
+  private val Action = stubControllerComponents().actionBuilder
+
+  override implicit lazy val app: Application =
+    new GuiceApplicationBuilder()
+      .bindings(bind(classOf[AkamaiAllowlistFilter]).to(classOf[TestAkamaiAllowlistFilterWithCustomFailureDefault]))
+      .configure(
+        "metrics.jvm" -> false,
+        "play.http.filters" -> "uk.gov.hmrc.allowlist.TestFilters"
+      )
+      .routes({
+        case ("GET", "/destination") => Action(Ok("destination"))
+        case ("GET", "/index") => Action(Ok("success"))
+        case ("GET", "/healthcheck") => Action(Ok("ping"))
+      })
+      .build()
 }
 
 @Singleton

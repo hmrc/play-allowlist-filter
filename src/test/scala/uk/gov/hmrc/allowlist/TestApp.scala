@@ -16,18 +16,25 @@
 
 package uk.gov.hmrc.allowlist
 
+import javax.inject.Inject
+import javax.inject.Singleton
+
 import akka.stream.Materializer
-import javax.inject.{Inject, Singleton}
 import org.scalatest.TestSuite
-import org.scalatestplus.play.OneAppPerSuite
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
-import play.api.mvc.Results._
-import play.api.mvc.{Action, Call}
+import play.api.mvc.Call
+import play.api.mvc._
+import play.api.test.Helpers._
 
-trait TestApp extends OneAppPerSuite {
+import Results.Ok
+
+trait TestApp extends GuiceOneAppPerSuite {
   self: TestSuite =>
+
+  private val Action = stubControllerComponents().actionBuilder
 
   override implicit lazy val app: Application = new GuiceApplicationBuilder()
     .bindings(bind(classOf[AkamaiAllowlistFilter]).to(classOf[TestAkamaiAllowlistFilter]))
