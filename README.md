@@ -51,7 +51,6 @@ object TestGlobal extends GlobalSettings {
   override def doFilter(next: EssentialAction): EssentialAction = {
     Filters(super.doFilter(next), myFilters: _*)
   }
-
 }
 ```
 
