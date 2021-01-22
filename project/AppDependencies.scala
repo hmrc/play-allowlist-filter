@@ -15,20 +15,17 @@ object AppDependencies {
   )
 
   lazy val test: Seq[ModuleID] = PlayCrossCompilation.dependencies(
-    shared = Seq(
-      "org.scalatest"          %% "scalatest"          % "3.0.9"      % Test
-    ),
     play26 = Seq(
-      "org.pegdown"            %  "pegdown"            % "1.6.0"      % Test,
-      "org.scalatestplus.play" %% "scalatestplus-play" % "3.1.2"      % Test
+      "org.scalatestplus.play" %% "scalatestplus-play" % "3.1.3"      % Test,
+      "org.pegdown"            %  "pegdown"            % "1.6.0"      % Test
     ),
     play27 = Seq(
-      "org.pegdown"            %  "pegdown"            % "1.6.0"      % Test,
-      "org.scalatestplus.play" %% "scalatestplus-play" % "4.0.3"      % Test
+      "org.scalatestplus.play" %% "scalatestplus-play" % "4.0.3"      % Test,
+      "org.pegdown"            %  "pegdown"            % "1.6.0"      % Test
     ),
     play28 = Seq(
-      "com.vladsch.flexmark"   %  "flexmark-all"       % "0.35.10"    % Test,
-      "org.scalatestplus.play" %% "scalatestplus-play" % "5.1.0"      % Test
+      "org.scalatestplus.play" %% "scalatestplus-play" % "5.1.0"      % Test,
+      "com.vladsch.flexmark"   %  "flexmark-all"       % "0.35.10"    % Test
     )
   )
 
