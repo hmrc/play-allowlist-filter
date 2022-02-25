@@ -2,21 +2,15 @@ import sbt.Keys._
 import sbt._
 import uk.gov.hmrc.versioning.SbtGitVersioning
 
-val appName = "play-allowlist-filter"
+val scala2_12 = "2.12.15"
+val scala2_13 = "2.13.7"
 
-lazy val playAllowlistFilter = (project in file("."))
-  .enablePlugins(SbtAutoBuildPlugin, SbtGitVersioning, SbtArtifactory)
+lazy val playAllowlistFilter = Project("play-allowlist-filter", file("."))
   .settings(
-    name := appName,
     majorVersion := 1,
-    makePublicallyAvailableOnBintray := true,
+    isPublicArtefact := true,
     libraryDependencies ++= AppDependencies.compile ++ AppDependencies.test,
-    scalaVersion := "2.12.12",
-    /*
-     * set fork in Test true to avoid error when PLAY_VERSION=2.7:
-     * - java.lang.AbstractMethodError: play.api.i18n.Messages$MessagesParser.scala$util$parsing$combinator$Parsers$$lastNoSuccessVar()Lscala/util/DynamicVariable;
-     * see thread at: https://github.com/scala/scala-parser-combinators/issues/197
-     */
-    fork in Test := true
+    scalaVersion := scala2_12,
+    crossScalaVersions := Seq(scala2_12, scala2_13)
   )
   .settings(PlayCrossCompilation.playCrossCompilationSettings)

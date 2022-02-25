@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,7 +28,6 @@ import play.api.Application
 import play.api.inject._
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.Call
-import play.api.mvc.Results._
 import play.api.mvc._
 import play.api.test.Helpers._
 
@@ -43,22 +42,30 @@ trait TestAppWithCustomFailureDefault extends GuiceOneAppPerSuite {
     new GuiceApplicationBuilder()
       .bindings(bind(classOf[AkamaiAllowlistFilter]).to(classOf[TestAkamaiAllowlistFilterWithCustomFailureDefault]))
       .configure(
-        "metrics.jvm" -> false,
+        "metrics.jvm"       -> false,
         "play.http.filters" -> "uk.gov.hmrc.allowlist.TestFilters"
       )
-      .routes({
+      .routes {
         case ("GET", "/destination") => Action(Ok("destination"))
-        case ("GET", "/index") => Action(Ok("success"))
+        case ("GET", "/index"      ) => Action(Ok("success"))
         case ("GET", "/healthcheck") => Action(Ok("ping"))
-      })
+      }
       .build()
 }
 
 @Singleton
-private class TestAkamaiAllowlistFilterWithCustomFailureDefault @Inject()(override val mat: Materializer) extends AkamaiAllowlistFilter {
-  override lazy val allowlist: Seq[String] = Seq("127.0.0.1")
-  override lazy val destination: Call = Call("GET", "/destination")
-  override lazy val excludedPaths: Seq[Call] = Seq(Call("GET", "/healthcheck"))
-  override def noHeaderAction(f: (RequestHeader) => Future[Result],
-                              rh: RequestHeader): Future[Result] = f(rh)
+private class TestAkamaiAllowlistFilterWithCustomFailureDefault @Inject()(
+  override val mat: Materializer
+) extends AkamaiAllowlistFilter {
+  override lazy val allowlist: Seq[String] =
+    Seq("127.0.0.1")
+
+  override lazy val destination: Call =
+    Call("GET", "/destination")
+
+  override lazy val excludedPaths: Seq[Call] =
+    Seq(Call("GET", "/healthcheck"))
+
+  override def noHeaderAction(f: RequestHeader => Future[Result], rh: RequestHeader): Future[Result] =
+    f(rh)
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,29 +33,26 @@ trait AkamaiAllowlistFilter extends Filter {
 
   def allowlist: Seq[String]
 
-  def excludedPaths: Seq[Call] = Seq.empty
+  def excludedPaths: Seq[Call] =
+    Seq.empty
 
   def destination: Call
 
-  def noHeaderAction(f: (RequestHeader) => Future[Result],
-                    rh: RequestHeader): Future[Result] = Future.successful(NotImplemented)
+  def noHeaderAction(f: RequestHeader => Future[Result], rh: RequestHeader): Future[Result] =
+    Future.successful(NotImplemented)
 
   def response: Result = Redirect(destination)
 
-  override def apply
-  (f: (RequestHeader) => Future[Result])
-  (rh: RequestHeader): Future[Result] =
-    if (excludedPaths contains toCall(rh)) {
+  override def apply(f: RequestHeader => Future[Result])(rh: RequestHeader): Future[Result] =
+    if (excludedPaths.contains(toCall(rh)))
       f(rh)
-    } else {
-      rh.headers.get(trueClient) map {
-        ip =>
-          if (allowlist.contains(ip))
-            f(rh)
-          else if (isCircularDestination(rh))
-            Future.successful(Forbidden)
-          else
-            Future.successful(response)
-      } getOrElse noHeaderAction(f, rh)
-    }
+    else
+      rh.headers.get(trueClient).fold(noHeaderAction(f, rh))(ip =>
+        if (allowlist.contains(ip))
+          f(rh)
+        else if (isCircularDestination(rh))
+          Future.successful(Forbidden)
+        else
+          Future.successful(response)
+      )
 }
