@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,8 +16,18 @@
 
 package uk.gov.hmrc.allowlist
 
-import javax.inject.Inject
+import play.api.test.FakeRequest
+import play.api.test.Helpers._
 
-import play.api.http.DefaultHttpFilters
+class AkamaiAllowlistFilterSpec
+  extends AkamaiAllowlistFilterCommonSpec
+     with TestApp {
 
-class TestFilters @Inject()(allowlist: AkamaiAllowlistFilter) extends DefaultHttpFilters(allowlist)
+  "AkamaiAllowlistFilter" must {
+
+    "return a `NotImplemented` when no `True-Client-IP` header is found" in {
+      val result = route(app, FakeRequest("GET", "/index")).value
+      status(result) must be (NOT_IMPLEMENTED)
+    }
+  }
+}

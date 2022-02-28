@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,17 +39,19 @@ trait TestApp extends GuiceOneAppPerSuite {
   override implicit lazy val app: Application = new GuiceApplicationBuilder()
     .bindings(bind(classOf[AkamaiAllowlistFilter]).to(classOf[TestAkamaiAllowlistFilter]))
     .configure("play.http.filters" -> "uk.gov.hmrc.allowlist.TestFilters")
-    .routes({
+    .routes {
       case ("GET", "/destination") => Action(Ok("destination"))
-      case ("GET", "/index") => Action(Ok("success"))
+      case ("GET", "/index"      ) => Action(Ok("success"))
       case ("GET", "/healthcheck") => Action(Ok("ping"))
-    })
-    .build
+    }
+    .build()
 }
 
 @Singleton
-private class TestAkamaiAllowlistFilter @Inject()(override val mat: Materializer) extends AkamaiAllowlistFilter {
-  override lazy val allowlist: Seq[String] = Seq("127.0.0.1")
-  override lazy val destination: Call = Call("GET", "/destination")
-  override lazy val excludedPaths: Seq[Call] = Seq(Call("GET", "/healthcheck"))
+private class TestAkamaiAllowlistFilter @Inject()(
+  override val mat: Materializer
+) extends AkamaiAllowlistFilter {
+  override lazy val allowlist    : Seq[String] = Seq("127.0.0.1")
+  override lazy val destination  : Call        = Call("GET", "/destination")
+  override lazy val excludedPaths: Seq[Call]   = Seq(Call("GET", "/healthcheck"))
 }

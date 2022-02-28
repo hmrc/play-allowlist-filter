@@ -1,22 +1,35 @@
 import sbt.Keys._
 import sbt._
-import uk.gov.hmrc.versioning.SbtGitVersioning
 
-val appName = "play-allowlist-filter"
+val scala2_12 = "2.12.15"
+val scala2_13 = "2.13.7"
 
-lazy val playAllowlistFilter = (project in file("."))
-  .enablePlugins(SbtAutoBuildPlugin, SbtGitVersioning, SbtArtifactory)
+lazy val commonSettings = Seq(
+  organization       := "uk.gov.hmrc",
+  majorVersion       := 1,
+  isPublicArtefact   := true,
+  scalaVersion       := scala2_12,
+  crossScalaVersions := Seq(scala2_12, scala2_13)
+)
+
+lazy val library = (project in file("."))
   .settings(
-    name := appName,
-    majorVersion := 1,
-    makePublicallyAvailableOnBintray := true,
-    libraryDependencies ++= AppDependencies.compile ++ AppDependencies.test,
-    scalaVersion := "2.12.12",
-    /*
-     * set fork in Test true to avoid error when PLAY_VERSION=2.7:
-     * - java.lang.AbstractMethodError: play.api.i18n.Messages$MessagesParser.scala$util$parsing$combinator$Parsers$$lastNoSuccessVar()Lscala/util/DynamicVariable;
-     * see thread at: https://github.com/scala/scala-parser-combinators/issues/197
-     */
-    fork in Test := true
+    publish / skip := true,
+    commonSettings
   )
-  .settings(PlayCrossCompilation.playCrossCompilationSettings)
+  .aggregate(
+    playAllowlistFilter,
+    playAllowlistFilterPlay28
+  )
+
+lazy val playAllowlistFilterPlay28 = Project("play-allowlist-filter-play-28", file("play-allowlist-filter-play-28"))
+  .settings(
+    commonSettings,
+    libraryDependencies ++= AppDependencies.compilePlay28 ++ AppDependencies.testPlay28
+  )
+
+// empty artefact, exists to ensure eviction of previous play-allowlist-filter jar which has now moved into play-allowlist-filter-play-xx
+lazy val playAllowlistFilter = Project("play-allowlist-filter", file("play-allowlist-filter"))
+  .settings(
+    commonSettings
+  )

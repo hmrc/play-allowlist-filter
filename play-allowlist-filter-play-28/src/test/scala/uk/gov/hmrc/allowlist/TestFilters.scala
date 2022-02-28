@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,17 +16,8 @@
 
 package uk.gov.hmrc.allowlist
 
-import play.api.test.FakeRequest
-import play.api.test.Helpers._
+import javax.inject.Inject
 
-class AkamaiAllowlistFilterWithCustomFailureDefaultSpec extends AkamaiAllowlistFilterCommonSpec with TestAppWithCustomFailureDefault {
+import play.api.http.DefaultHttpFilters
 
-  "AkamaiAllowlistFilter" must {
-
-    "return the success response when no `True-Client-IP` header is found" in {
-      val Some(result) = route(app, FakeRequest("GET", "/index"))
-      status(result) must be (OK)
-      contentAsString(result) must be ("success")
-    }
-  }
-}
+class TestFilters @Inject()(allowlist: AkamaiAllowlistFilter) extends DefaultHttpFilters(allowlist)

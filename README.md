@@ -11,12 +11,15 @@ Getting Started
 1. Import the library:
 
   ```scala
-  resolvers += Resolver.bintrayRepo("hmrc", "releases")
+  resolvers += MavenRepository("HMRC-open-artefacts-maven2", "https://open.artefacts.tax.service.gov.uk/maven2")
+
   libraryDependencies ++= Seq(
-    "uk.gov.hmrc" %% "play-allowlist-filter" % "0.1.0"
+    "uk.gov.hmrc" %% "play-allowlist-filter-play-xx" % "1.2.0"
   )
   ```
-  
+
+  Where `play-xx` is your version of Play (e.g. `play-28`).
+
 2. Implement the filter trait, for example:
 
   ```scala
@@ -65,4 +68,3 @@ object AllowlistFilter extends AkamaiAllowlistFilter {
 ```
 
 ===
-

@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,42 +16,38 @@
 
 package uk.gov.hmrc.allowlist
 
+import org.scalatest.OptionValues
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatestplus.play.PlaySpec
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 
-trait AkamaiAllowlistFilterCommonSpec extends PlaySpec with ScalaFutures { this: GuiceOneAppPerSuite =>
+trait AkamaiAllowlistFilterCommonSpec
+  extends PlaySpec
+     with ScalaFutures
+     with OptionValues { this: GuiceOneAppPerSuite =>
 
   "AkamaiAllowlistFilter (Common)" must {
     "return successfully when a valid `True-Client-IP` header is found" in {
-      val Some(result) = route(app, FakeRequest("GET", "/index").withHeaders(
-        "True-Client-IP" -> "127.0.0.1"
-      ))
+      val result = route(app, FakeRequest("GET", "/index").withHeaders("True-Client-IP" -> "127.0.0.1")).value
       status(result) must be(OK)
       contentAsString(result) must be("success")
     }
 
     "return a `Redirect` when an invalid `True-Client-IP` header is found" in {
-      val Some(result) = route(app, FakeRequest("GET", "/index").withHeaders(
-        "True-Client-IP" -> "someotherip"
-      ))
+      val result = route(app, FakeRequest("GET", "/index").withHeaders("True-Client-IP" -> "someotherip")).value
       status(result) must be(SEE_OTHER)
       redirectLocation(result) must be(Some("/destination"))
     }
 
     "return `Forbidden` if the user would end up in a redirect loop" in {
-      val Some(result) = route(app, FakeRequest("GET", "/destination").withHeaders(
-        "True-Client-IP" -> "someotherip"
-      ))
-
+      val result = route(app, FakeRequest("GET", "/destination").withHeaders("True-Client-IP" -> "someotherip")).value
       status(result) mustBe FORBIDDEN
     }
 
     "return `Ok` if the route to be accessed is an excluded path" in {
-      val Some(result) = route(app, FakeRequest("GET", "/healthcheck"))
-
+      val result = route(app, FakeRequest("GET", "/healthcheck")).value
       status(result) mustBe OK
     }
   }
