@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,7 +41,9 @@ trait AkamaiAllowlistFilter extends Filter {
   def noHeaderAction(f: RequestHeader => Future[Result], rh: RequestHeader): Future[Result] =
     Future.successful(NotImplemented)
 
-  def response: Result = Redirect(destination)
+  @annotation.nowarn("msg=parameter value request in method response is never used")
+  def response(implicit request: RequestHeader): Result =
+    Redirect(destination)
 
   override def apply(f: RequestHeader => Future[Result])(rh: RequestHeader): Future[Result] =
     if (excludedPaths.contains(toCall(rh)))
@@ -53,6 +55,6 @@ trait AkamaiAllowlistFilter extends Filter {
         else if (isCircularDestination(rh))
           Future.successful(Forbidden)
         else
-          Future.successful(response)
+          Future.successful(response(rh))
       )
 }
