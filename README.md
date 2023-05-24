@@ -67,4 +67,10 @@ object AllowlistFilter extends AkamaiAllowlistFilter {
 }
 ```
 
-===
+---
+
+## Changes
+
+### Version 1.2.0
+
+- Adds RequestHeader parameter to `AkamaiAllowlistFilter#response`, required for some overrides.
