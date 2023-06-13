@@ -2,6 +2,12 @@
 play-allowlist-filter
 =====================
 
+This library has been deprecated. Please use [bootstrap-play version](https://github.com/hmrc/bootstrap-play#user-content-allow-list-filter) `v7.16.0` or
+greater.
+
+<hr/>
+
+
 This library includes a ```Filter``` for the Play! framework which can be used to block users whose IP addresses are not on a predetermined allowlist.
 
 Currently the only implementation of allowlisting available uses the IP from the ```True-Client-IP``` header provided by Akamai.
