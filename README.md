@@ -77,6 +77,10 @@ object AllowlistFilter extends AkamaiAllowlistFilter {
 
 ## Changes
 
+### Version 1.3.0
+
+- Remove support for Play 2.8
+
 ### Version 1.2.0
 
 - Adds RequestHeader parameter to `AkamaiAllowlistFilter#response`, required for some overrides.
